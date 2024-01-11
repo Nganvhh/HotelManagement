@@ -19,7 +19,7 @@ public class InputMainMenu {
         menuFunction.addNewOption("Updating Hotel information");
         menuFunction.addNewOption("Deleting Hotel");
         menuFunction.addNewOption("Searching Hotel");
-        menuFunction.addNewOption("Displaying a hotel list");
+        menuFunction.addNewOption("Displaying Hotel list(descending by name)");
         menuFunction.addNewOption("Save to file");
         menuFunction.addNewOption("Others Quit");
         

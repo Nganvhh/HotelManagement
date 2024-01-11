@@ -1,104 +1,94 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dal;
 
-import bll.dto.Hotel;
-import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
-/**
- *
- * @author MY LAPTTOP
- */
 public class FileManagement {
 
-    public static boolean loadDataFromFile (List<Hotel> list, String filename) {
+    public <T> boolean loadDataFromFile(List<T> list, String fileName) {
         list.clear();
-        File f = new File(filename);
-        if(!f.exists()) 
+        File f = new File(fileName);
+        if (!f.exists()) {
             return false;
+        }
         try {
-            FileReader fr = new FileReader(f);
-            BufferedReader bf = new BufferedReader(fr);
-            String line = "";
-            while((line = bf.readLine()) != null) {
-                StringTokenizer tokens = new StringTokenizer(line, ",");
-                String id = tokens.nextToken().trim().toUpperCase();
-                String name = tokens.nextToken().trim();
-                int roomAvailable = Integer.parseInt(tokens.nextToken().trim());
-                String address = tokens.nextToken().trim();
-                String phone = tokens.nextToken().trim();
-                int rating = Integer.parseInt(tokens.nextToken().trim());
-                Hotel h = new Hotel(id, name, roomAvailable, address, phone, rating);
-                list.add(h);
+            InputStream is = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(is);
+            
+            while(true){
+                try {
+                    T c = (T) ois.readObject();
+                    list.add(c);
+                } catch (Exception e) {
+                    break;
+                }
             }
-            bf.close();
-            fr.close();
+            ois.close();
+            is.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+            e.printStackTrace();
         }
         return true;
     }
-    
-    public static boolean saveDataToFile(List<Hotel> list, String filename) {
-        File f = new File(filename);
-        if(!f.exists()) {
-            System.out.println("Empty list");
+
+    public <T> boolean saveDataToFile(List<T> list, List<T> list2, String fileName, String msg) {
+        File f = new File(fileName);
+        if (!f.exists()) {
+            System.out.println("File not exist!");
             return false;
         }
+        
         try {
-            FileWriter fw = new FileWriter(f);
-            PrintWriter pw = new PrintWriter(fw);
-            for (Hotel h : list) {
-                pw.println(h.getId() + "," + h.getName() + "," + h.getRoomAvailable() 
-                    + "," + h.getAddress() + "," + h.getPhone() + "," + h.getRating());
+            OutputStream os = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            for (T item : list) {
+                oos.writeObject(item);
             }
-            pw.close();
-            fw.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-        return true;
-    }
-    
-    public static boolean saveDataToFile(List<Hotel> list, String filename, String msg) {
-        File f = new File(filename);
-        if(!f.exists()) {
-            System.out.println("Empty list");
-            return false;
-        }
-        try {
-            FileWriter fw = new FileWriter(f);
-            PrintWriter pw = new PrintWriter(fw);
-            for (Hotel h : list) {
-                pw.println(h.getId() + "," + h.getName() + "," + h.getRoomAvailable() 
-                    + "," + h.getAddress() + "," + h.getPhone() + "," + h.getRating());
+            for (T item : list2) {
+                oos.writeObject(item);
             }
-            pw.close();
-            fw.close();
+            oos.flush();
+            oos.close();
+            os.close();
             System.out.println(msg);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            return true; 
+        } catch (IOException e) {
+            System.out.println(e);
             return false;
         }
-        return true;
     }
-   
+
+    public <T> boolean saveDataToFile(List<T> list, String fileName, String msg) {
+        File f = new File(fileName);
+        if (!f.exists()) {
+            System.out.println("Empty list");
+            return false;
+        }
+        try {
+            OutputStream os = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            for (T item : list) {
+                oos.writeObject(item);
+            }
+            oos.flush();
+            oos.close();
+            os.close();
+            System.out.println(msg);
+            return true;
+        } catch (IOException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
 }

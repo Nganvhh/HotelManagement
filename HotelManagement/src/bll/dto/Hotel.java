@@ -5,11 +5,15 @@
  */
 package bll.dto;
 
+import java.beans.Transient;
+import java.io.Serializable;
+
 /**
  *
  * @author MY LAPTTOP
  */
-public class Hotel implements Comparable<Hotel>{
+public class Hotel implements Serializable, Comparable<Hotel>{
+    
     private String id;
     private String name;
     private int roomAvailable;
@@ -77,9 +81,9 @@ public class Hotel implements Comparable<Hotel>{
     public String toString() {
         return "HotelManagement{" + "id=" + id + ", name=" + name + ", roomAvailable=" + roomAvailable + ", address=" + address + ", phone=" + phone + ", rating=" + rating + '}';
     }
-
+    
     public void hotelInfor() {
-        System.out.printf("|%-4s|%-20s|%14d|%-57s|%-10s|%6s|\n", id, name, roomAvailable, address, phone, (rating + " star"));
+        System.out.printf("|%-4s|%-20s|%14d|%-87s|%-10s|%8s|\n", id, name, roomAvailable, address, phone, (rating + " star"));
     }
     
     @Override

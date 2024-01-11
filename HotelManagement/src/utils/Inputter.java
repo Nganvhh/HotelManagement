@@ -42,7 +42,7 @@ public class Inputter {
             System.out.print(welcome);
             result = sc.nextLine();
             if (result.isEmpty()) {
-                System.out.println(msg);
+                System.err.println(msg);
             } else {
                 check = false;
             }
@@ -52,7 +52,7 @@ public class Inputter {
     
     public static String getString(String welcome) {
         System.out.print(welcome);
-        String result = sc.nextLine();
+        String result = sc.nextLine().trim();
         return result;
     }
 
@@ -61,11 +61,11 @@ public class Inputter {
         String result = "";
         do {
             System.out.print(welcome);
-            result = sc.nextLine();
+            result = sc.nextLine().trim();
             if (result.isEmpty()) {
-                System.out.println(msg);
+                System.err.println(msg);
             } else if (!result.matches(pattern)) {
-                System.out.println(msgreg);
+                System.err.println(msgreg);
             } else {
                 check = false;
             }
@@ -82,12 +82,12 @@ public class Inputter {
             if (result.isEmpty()) {
                 check = false;
             } else if (!result.matches(pattern)) {
-                System.out.println(msgreg);
+                System.err.println(msgreg);
             } else {
                 check = false;
             }
         } while (check);
-        return result;
+        return result.trim();
     }
 
     public static int getAnInteger(String welcome, String errorMsg) {
@@ -95,17 +95,16 @@ public class Inputter {
         while (true) {
             try {
                 System.out.print(welcome);
-                number = Integer.parseInt(sc.nextLine());
+                number = Integer.parseInt(sc.nextLine().trim());
                 return number;
             } catch (Exception e) {
-                System.out.println(errorMsg);
+                System.err.println(errorMsg);
             }
         }
     }
 
     public static int getAnInteger(String welcome, String errorMsg, String errorMsgException, int lowerBound, int upperBound) {
         int number, tmp;
-
         if (lowerBound > upperBound) {
             tmp = lowerBound;
             lowerBound = upperBound;
@@ -114,13 +113,15 @@ public class Inputter {
         while (true) {
             try {
                 System.out.print(welcome);
-                number = Integer.parseInt(sc.nextLine());
+                number = Integer.parseInt(sc.nextLine().trim());
                 if (number < lowerBound || number > upperBound) {
-                    System.out.println(errorMsg);
+                    System.err.println(errorMsg);
+                } else{
+                    return number;
                 }
-                return number;
+                
             } catch (Exception e) {
-                System.out.println(errorMsgException);
+                System.err.println(errorMsgException);
             }
         }
     }
@@ -131,15 +132,15 @@ public class Inputter {
         do {
             try {
                 System.out.print(welcome);
-                number = Integer.parseInt(sc.nextLine());
+                number = Integer.parseInt(sc.nextLine().trim());
                 if (number < min) {
-                    System.out.println("Number must be large than " + min);
+                    System.err.println("Number must be large than " + min);
                 } else {
                     check = false;
                 }
 
             } catch (Exception e) {
-                System.out.println(msg);
+                System.err.println(msg);
             }
         } while (check || number < min);
         return number;
@@ -154,13 +155,13 @@ public class Inputter {
                 System.out.print(welcome);
                 number = Float.parseFloat(sc.nextLine());
                 if (number < min) {
-                    System.out.println("Number must be large than " + min);
+                    System.err.println("Number must be large than " + min);
                 } else {
                     check = false;
                 }
 
             } catch (Exception e) {
-                System.out.println("Input number!!!");
+                System.err.println("Input number!!!");
             }
         } while (check || number < min);
         return number;

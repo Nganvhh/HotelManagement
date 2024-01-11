@@ -8,11 +8,10 @@ package bll.serviceinterface;
 import bll.component.DataValidation;
 import bll.component.SearchHotelList;
 import bll.dto.Hotel;
-import dal.FileManagement;
+import dal.HotelDAO;
 import gui.Menu;
 import gui.PrintFormat;
 import java.io.EOFException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import utils.Inputter;
@@ -22,33 +21,30 @@ import utils.Inputter;
  * @author MY LAPTTOP
  */
 public class HotelService implements IHotelService {
-    public static List<Hotel> listOld = new ArrayList<Hotel>();
-    public static List<Hotel> listNew = new ArrayList<Hotel>();
-    
-    public HotelService() {
+    private List<Hotel> listOld = new ArrayList();
+    private List<Hotel> listNew = new ArrayList();
+    private final String filename = "hotel.dat";
+    private HotelDAO hd;
+    public HotelService() throws EOFException{
+        hd = new HotelDAO();
+        loadFromFile();
     }
     public void loadFromFile() {
         try {
-            FileManagement.loadDataFromFile(listOld, "hotel.dat");
+            hd.loadDataFromFile(listOld, filename);
         } catch (Exception e) {
             System.err.println(e.getMessage());
-        }
-        
-        if(listOld.isEmpty()) {
-            System.out.println("No hotels found in the file. Adding a new one");
-            addHotel();
         }
     }
     
 
     @Override
     public void addHotel() {
-//        AddNewHotel.addHotel(listOld, listNew);
         String choice;
         do {
             String id, name, address, phone;
             int roomAvailable, rating;
-            System.out.println("Enter new Hotel detail");
+            System.out.println("\nInput new Hotel information:");
             id = DataValidation.inputHotelID(listOld, listNew);
             name = DataValidation.inputHotelName();
             roomAvailable = DataValidation.inputHotelRoomAvailable();
@@ -57,8 +53,7 @@ public class HotelService implements IHotelService {
             rating = DataValidation.inputHotelRating();
             Hotel h = new Hotel(id, name, roomAvailable, address, phone, rating);
             listNew.add(h);
-            System.out.println("Hotel added!");
-            System.out.println("Product save file successfull!");
+            System.out.println("\nThe new Hotel has been added successfully!");
         } while (Inputter.inputYN("Do you want to continue(Y/N): "));
     }
 
@@ -69,20 +64,20 @@ public class HotelService implements IHotelService {
             System.out.println("List is empty!");
             return;
         }
-        String id = DataValidation.inputHotelID("Enter ID to be check:");
+        String id = DataValidation.inputHotelID("\nEnter ID to be check: ");
         Hotel h = DataValidation.search(listOld, id);
         if (h != null) {
             System.out.println("Exist Hotel");
             h.hotelInfor();
         } else {
-            System.out.println("No Hotel Found!");
+            System.err.println("No Hotel Found!");
         }
     }
 
     @Override
     public void updateHotelInfomation() {
 //        loadFromFile();
-        String searchId = DataValidation.inputHotelID("Enter ID to be update: ");
+        String searchId = DataValidation.inputHotelID("\nEnter ID to be update: ");
         Hotel h = DataValidation.search(listOld, listNew, searchId);
         if (h == null) {
             System.out.println("Hotel does not exist");
@@ -116,27 +111,45 @@ public class HotelService implements IHotelService {
         } else {
             listNew.set(listNew.indexOf(h), new Hotel(searchId, name, roomAvailable, address, phone, rating));
         }
+        saveListOldToFile();
+        listOld.clear();
+        loadFromFile();
+        
+        System.out.println(listNew);
+        System.out.println(listOld);
     }
 
     @Override
     public void deleteHotel() {
-        String searchId = DataValidation.inputHotelID("Enter ID to be detele: ");
+        String searchId = DataValidation.inputHotelID("\nEnter ID to be detele: ");
         Hotel h = DataValidation.search(listOld, searchId);
-        if (h == null) {
-            System.out.println("Hotel does not exist");
+//        if (h == null) {
+//            System.out.println("Hotel does not exist");
+//            return;
+//        }
+//        System.out.println("Do you ready want to delete this hotel? (Y/N)");
+        if (DataValidation.inputYN("Do you ready want to delete this hotel? (Y/N): ") == false) {
             return;
         }
-        System.out.println("Do you ready want to delete this hotel? (Y/N)");
-        if (Inputter.inputYN(Inputter.getString()) == false) {
-            return;
-        }
-        listOld.remove(listOld.indexOf(h));
-        if (DataValidation.search(listOld, searchId) != null) {
-            System.out.println("Delete failed");
-        } else {
-            System.out.println("Deleted successfully");
-        }
-//        saveToFile();
+        
+//        if (DataValidation.search(listOld, searchId) != null) {
+//            System.out.println("Delete failed");
+//        } else {
+//            System.out.println("Deleted successfully");
+//        }
+        if(h == null)
+            System.out.println("\nDelete failed");
+        else{
+            listOld.remove(listOld.indexOf(h));
+            System.out.println("\nDeleted successfully");
+            saveListOldToFile();
+            listOld.clear();
+            loadFromFile();
+        } 
+        
+        
+        System.out.println(listNew);
+        System.out.println(listOld);
     }
 
     @Override
@@ -165,18 +178,20 @@ public class HotelService implements IHotelService {
         }
         listOld.sort((h1, h2) -> h2.getName().compareToIgnoreCase(h1.getName()));
         PrintFormat.printFormat(listOld);
+        System.out.println("Total: " + listOld.size() + " hotel(s)");
     }
 
     @Override
     public void saveToFile() {
-        listOld.addAll(listNew);
-        if(!listOld.isEmpty()||!listNew.isEmpty()){
-//            FileManagement.saveDataToFile(listNew, "hotel.dat");
-            FileManagement.saveDataToFile(listOld, "hotel.dat");
-            
-            System.out.println("Saved successfully");
-        }
-            
+        hd.saveDataToFile(listNew, filename, "\nSaved successfully");
+        loadFromFile();
+        
+        System.out.println(listNew);
+        System.out.println(listOld);
+    }
+    
+    public void saveListOldToFile() {
+            hd.saveDataToFile(listOld, filename,"\n");
     }
 
 }

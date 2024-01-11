@@ -14,22 +14,22 @@ import java.util.List;
  */
 public class PrintFormat {
     public static void printFormat(List<Hotel> list) {
-        for (int i = 0; i < 118; i++) {
+        System.out.println("");
+        for (int i = 0; i < 150; i++) {
             System.out.printf("-");
         }
-        System.out.println("");
-        System.out.printf("| ID |%8s%4s%8s|Room Available|%25s%7s%25s|   Phone  |Rating|\n"," ", "Name"," "," ","Address" ," ", "Phone", "Rating");
-        for (int i = 0; i < 118; i++) {
+        System.out.printf("\n| ID |%8s%4s%8s|Room Available|%40s%7s%40s|   Phone  | Rating |\n"," ", "Name"," "," ","Address" ," ", "Phone", "Rating");
+        for (int i = 0; i < 150; i++) {
             System.out.printf("-");
         }
         System.out.println("");
         for (Hotel h : list) {
             h.hotelInfor();
+            for (int i = 0; i < 150; i++) {
+                System.out.printf("-");
         }
-        for (int i = 0; i < 118; i++) {
-            System.out.print("-");
+            System.out.println("");
         }
-        System.out.println("");
     }
     
 }

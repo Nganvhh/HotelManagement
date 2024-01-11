@@ -32,16 +32,23 @@ public class Menu {
             System.out.println("There is no option in the menu");
             return;
         }
-        System.out.println("-------------------------------------");
-        System.out.println("Welcome to " + menuTitle);
+        System.out.println("\n");
+        for (int i = 0; i < 22 - menuTitle.length()/2 ; i++) {
+            System.out.print("=");
+        }
+        System.out.print(" *" + menuTitle + "* ");
+        for (int i = 0; i < 22 - menuTitle.length()/2 ; i++) {
+            System.out.print("=");
+        }
+        System.out.println("");
         for (int i = 0; i < optionList.size(); i++) {
             System.out.println((i + 1) + "-" + optionList.get(i) + ".");
         }
-        System.out.println("-------------------------------------");
+        System.out.println("================================================"); //48 dấu =
     }
     
     public int getChoice() {
-        String inputMsg = "Choose [1.." + optionList.size() + "]: ";
+        String inputMsg = "Enter your choice [1.." + optionList.size() + "]: ";
         String errorMsg = "You are required to choose the option 1.." + optionList.size();
         return Inputter.getAnInteger(inputMsg, errorMsg, errorMsg, 1, optionList.size());
     }

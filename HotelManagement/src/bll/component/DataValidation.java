@@ -14,7 +14,7 @@ import utils.Inputter;
  *
  * @author MY LAPTTOP
  */
-public class DataValidation {
+public class DataValidation extends Inputter{
     private static Scanner sc = new Scanner(System.in);
     
     public static Hotel search(List<Hotel> list, String id) {
@@ -64,7 +64,7 @@ public class DataValidation {
     }
     
     public static String inputHotelAddress() {
-        return Inputter.getStringreg("Enter Hotel Address: ", "^[A-Za-z0-9 ]+$", "Address is not null","Address format is wrong");
+        return Inputter.getStringreg("Enter Hotel Address: ", "^[A-Za-z0-9 /,]+$", "Address is not null","Address format is wrong");
     }
     
     public static String inputHotelPhone() {
@@ -72,7 +72,7 @@ public class DataValidation {
     }
     
     public static int inputHotelRating() {
-        return Inputter.getAnInteger("Enter Hotel Rating (1-6): ", "Choose a Rating from 1 to 6", "Rating format is wrong", 0, 6);
+        return Inputter.getAnInteger("Enter Hotel Rating (0-6): ", "Choose a Rating from 1 to 6", "Rating format is wrong", 0, 6);
     }
     
     public static int updateRoomAvailable(Hotel h, String welcome, int min) {

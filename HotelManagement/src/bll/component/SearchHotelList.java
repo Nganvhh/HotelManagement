@@ -17,9 +17,9 @@ import java.util.List;
 public class SearchHotelList {
     public static  void searchByHotelID(List<Hotel> list){
         List<Hotel> tmp = new ArrayList();
-        String id = DataValidation.inputHotelID("Enter ID to be search: ");
+        String id = DataValidation.inputHotelID("\nEnter ID to be search: ");
         for (Hotel h : list) {
-            if(h.getId().contentEquals(id.toUpperCase())) 
+            if(h.getId().contains(id.toUpperCase())) 
                 tmp.add(h);
         }
         tmp.sort((h1,h2) -> h2.getId().compareToIgnoreCase(h1.getId()));
@@ -28,6 +28,7 @@ public class SearchHotelList {
     
     public static  void searchByHotelName(List<Hotel> list){
         List<Hotel> tmp = new ArrayList();
+        System.out.println("");
         String name = DataValidation.inputHotelName();
         for (Hotel h : list) {
             if(h.getName().equalsIgnoreCase(name))

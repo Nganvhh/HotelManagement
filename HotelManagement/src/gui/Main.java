@@ -15,9 +15,8 @@ import java.io.EOFException;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws EOFException {
         HotelService h = new HotelService();
-        h.loadFromFile();
         int choice;
         do {
             choice = InputMainMenu.mainMenu();
@@ -44,10 +43,9 @@ public class Main {
                     h.saveToFile();
                     break;
                 case 8:
-                    System.out.println("Quit");
+                    System.out.println("\nQuit");
                     break;
             }
         } while (choice > 0 && choice < 8);
-
     }
 }
